@@ -51,7 +51,7 @@ with socket.create_connection(("localhost", 8443)) as sock:
                 message = input("Введите сообщение для сервера: ").strip()
                 arr, count = fill_arr(message)
                 message = chifrz(arr, count)
-                print(f'chifrz {message}')
+                print(f'chifrz: {message}')
                 ssl_sock.sendall(message.encode('utf-8'))
                 response = ssl_sock.recv(1024)
                 print(f"Ответ от сервера: {response.decode('utf-8')}")
