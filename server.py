@@ -40,18 +40,20 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     print(f"SSL-сервер запущен на {HOST}:{PORT}...")
 
     with context.wrap_socket(server_socket, server_side=True) as ssl_socket:
-        while True:
+        a = True
+        while a:
             client_socket, client_addr = ssl_socket.accept()
             print(f"Клиент подключён: {client_addr}")
 
             with client_socket:
-                while True:
+                while a:
                     data = client_socket.recv(1024)
                     if not data:
-                        break
+                        server_socket.close()
+                        a = False
                     print(f"Получено сообщение: {data.decode('utf-8')}")
                     count = len(data.decode('utf-8')) // 12 * 2
                     arr = dechifrz(data.decode('utf-8'), count)
                     original_text = reconstruct_text(arr)
                     client_socket.sendall(original_text.encode('utf-8'))
-                    print(f"Отправлено обратно: {data.decode('utf-8')}")
+                    print(f"Отправлено обратно: {original_text}")
